@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1060968737534",
+    "firebase_url": "https://trabajofct-c7421.firebaseio.com",
+    "project_id": "trabajofct-c7421",
+    "storage_bucket": "trabajofct-c7421.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060968737534:android:6592a032e41e30756993af",
+        "android_client_info": {
+          "package_name": "com.example.trabajofct"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060968737534-nesno97oodb984rd80467mhrhvqmje3k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trabajofct",
+            "certificate_hash": "44a1e2b9d56d0d24caf32f216ea66219650b1799"
+          }
+        },
+        {
+          "client_id": "1060968737534-iaimk7t8fif1ela5nf2lhf9dh1l208ie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWQy0xib4bEGy7EZUBnYUlUUyR3sKHQvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060968737534-iaimk7t8fif1ela5nf2lhf9dh1l208ie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

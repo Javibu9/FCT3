@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:orientation="vertical"
+    tools:context="com.example.trabajofct.Fragments.ModificarFragment">
+
+    <EditText
+        android:id="@+id/editTextNombreModificar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre"/>
+
+    <EditText
+        android:id="@+id/editTextApellidosModificar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Apellidos"/>
+
+    <EditText
+        android:id="@+id/editTextEdadModificar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Edad"/>
+
+    <EditText
+        android:id="@+id/editTextEmailModificar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Email"/>
+
+
+    <EditText
+        android:id="@+id/editTextContraseñaModificar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Contraseña"
+        android:inputType="textPassword"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnSubirFotoModificar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subir Foto de perfil"
+            android:layout_marginTop="20dp"
+            />
+
+
+        <ImageView
+            android:id="@+id/modificarImagenUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp">
+        </ImageView>
+
+        <Button
+            android:id="@+id/btnModificar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Modificar"
+            android:layout_marginTop="20dp"
+            />
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
