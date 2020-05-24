@@ -70,9 +70,12 @@ public class GruposFragment extends Fragment{
         anadirGrupos = (FloatingActionButton) view.findViewById(R.id.btnAnadirGrupo);
         listaGrupos = (ListView) view.findViewById(R.id.listaGrupos);
 
+        //para que coja el menu de eliminar y editar
         registerForContextMenu(listaGrupos);
+
         final String id = firebaseAuth.getUid();
 
+        //para que coja el menu de buscar en el toolbar
         setHasOptionsMenu(true);
 
         BBDD.child("Grupos").orderByChild("idUsuario").equalTo(id).addValueEventListener(new ValueEventListener() {
@@ -103,6 +106,7 @@ public class GruposFragment extends Fragment{
         return view;
     }
 
+    //la información que saldrá a acada item al seleccionarlo
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -114,7 +118,7 @@ public class GruposFragment extends Fragment{
 
     }
 
-
+    //para eliminar y editar cada item seleccionado
     @Override
     public boolean onContextItemSelected(MenuItem menu){
 
@@ -153,6 +157,7 @@ public class GruposFragment extends Fragment{
         }
     }
 
+    //para buscar en la lista
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_buscador, menu);

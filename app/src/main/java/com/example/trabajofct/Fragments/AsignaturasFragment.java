@@ -65,8 +65,10 @@ public class AsignaturasFragment extends Fragment {
         listaAsignaturas = (ListView)view.findViewById(R.id.listaAsignaturas);
         asignaturas.clear();
 
+        //para que coja el menu de eliminar y editar
         registerForContextMenu(listaAsignaturas);
 
+        //para que coja el menu de buscar en el toolbar
         setHasOptionsMenu(true);
 
         BBDD.child("Asignaturas").addValueEventListener(new ValueEventListener() {
@@ -100,6 +102,7 @@ public class AsignaturasFragment extends Fragment {
         return view;
     }
 
+    //la información que saldrá a acada item al seleccionarlo
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -109,7 +112,7 @@ public class AsignaturasFragment extends Fragment {
         inflater.inflate(R.menu.menu_asignaturas, menu);
     }
 
-
+    //para eliminar y editar cada item seleccionado
     @Override
     public boolean onContextItemSelected(MenuItem menu){
 
@@ -147,21 +150,13 @@ public class AsignaturasFragment extends Fragment {
         }
     }
 
+    //para buscar en la lista
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_buscador, menu);
         MenuItem searchItem = menu.findItem(R.id.buscador);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.onActionViewExpanded();
-        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if(hasFocus){
-                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.showSoftInput(view, 0);
-                }
-            }
-        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -170,7 +165,6 @@ public class AsignaturasFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //ArrayList <Grupos> grupoFiltrado = filtrarGrupos(grupos, textoFiltrar);
                 adapterAsignaturas.getFilter().filter(newText);
                 return false;
             }

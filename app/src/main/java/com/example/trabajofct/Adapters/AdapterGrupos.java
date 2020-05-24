@@ -109,20 +109,4 @@ public class AdapterGrupos extends BaseAdapter implements Filterable {
         private TextView nombreGrupo;
         private TextView numeroGrupo;
     }
-
-    public void setFilter(String charText){
-        charText = charText.toLowerCase(Locale.getDefault());
-        grupos.clear();
-        if (charText.length() == 0) {
-            this.grupos.addAll(grupos);
-        }else{
-            for ( Grupos grupo : grupos) {
-                if (grupo.getNombre().toLowerCase(Locale.getDefault()).contains(charText)){
-                    grupos.add(grupo);
-                }
-            }
-        }
-        notifyDataSetChanged();
-
-    }
 }
