@@ -1,25 +1,67 @@
 package com.example.trabajofct.Modules;
 
 
+import java.util.ArrayList;
 
 public class Usuarios {
+    private String idUsuario;
     private String urlImagen;
     private String nombre;
     private String apellidos;
     private String email;
     private int edad;
     private String contraseña;
+    private String tipoUsuario;
+    private String grupo;
+    private ArrayList<String> asignaturas;
 
     public Usuarios() {
     }
 
-    public Usuarios(String urlImagen, String nombre, String apellidos, String email, int edad, String contraseña) {
+    public Usuarios(String idUsuario, String urlImagen, String nombre, String apellidos, String email, int edad, String contraseña, String tipoUsuario, String grupo, ArrayList<String> asignaturas) {
+        this.idUsuario = idUsuario;
         this.urlImagen = urlImagen;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
         this.edad = edad;
         this.contraseña = contraseña;
+        this.tipoUsuario = tipoUsuario;
+        this.grupo = grupo;
+        this.asignaturas = asignaturas;
+    }
+
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
+    }
+
+    public ArrayList<String> getAsignaturas() {
+        return asignaturas;
+    }
+
+    public void setAsignaturas(ArrayList<String> asignaturas) {
+        this.asignaturas = asignaturas;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getTipoUsuario() {
+
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     public String getUrlImagen() {

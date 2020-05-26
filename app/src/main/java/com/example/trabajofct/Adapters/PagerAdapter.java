@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.trabajofct.Fragments.AlumnosFragment;
+import com.example.trabajofct.Fragments.UsuariosFragment;
 import com.example.trabajofct.Fragments.AsignaturasFragment;
 import com.example.trabajofct.Fragments.GruposFragment;
 
@@ -31,7 +31,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case ALUMNOS_FRAGMENT:
-                return new AlumnosFragment();
+                return new UsuariosFragment();
             case GRUPOS_FRAGMENT:
                 return new GruposFragment();
             case ASIGNATURAS_FRAGMENT:

@@ -30,7 +30,7 @@ public class TabsAlumno extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tabs_alumno, container, false);
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Alumnos"));
+        tabLayout.addTab(tabLayout.newTab().setText("Usuarios"));
         tabLayout.addTab(tabLayout.newTab().setText("Grupos"));
         tabLayout.addTab(tabLayout.newTab().setText("Asignaturas"));
 
