@@ -58,9 +58,9 @@ public class UsuariosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_asignaturas, container, false);
+        View view = inflater.inflate(R.layout.fragment_usuarios, container, false);
 
-        listaUsuarios = (ListView)view.findViewById(R.id.listaAsignaturas);
+        listaUsuarios = (ListView)view.findViewById(R.id.listaUsuarios);
         usuarios.clear();
 
         //para que coja el menu de eliminar y editar
@@ -117,7 +117,7 @@ public class UsuariosFragment extends Fragment {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menu.getMenuInfo();
 
         switch(menu.getItemId()){
-            case R.id.eliminarAsignaturas:
+            case R.id.eliminarUsuario:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                 builder
@@ -138,7 +138,7 @@ public class UsuariosFragment extends Fragment {
                 return true;
 
             case R.id.modificarUsuario :
-                Intent intent = new Intent(getActivity(), AnadirAsignatura.class);
+                Intent intent = new Intent(getActivity(), RegisterActivity.class);
                 intent.putExtra("idUsuario", usuarios.get(info.position).getIdUsuario());
                 startActivity(intent);
                 return true;

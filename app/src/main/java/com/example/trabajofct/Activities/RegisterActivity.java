@@ -86,6 +86,9 @@ public class RegisterActivity extends AppCompatActivity {
     private CharSequence[] charSequence;
     private ArrayList<String> asignaturas = new ArrayList<String>();
     private List<String>asignaturasRestantes;
+
+    private AlertDialog.Builder builder;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resgistro);
@@ -160,48 +163,76 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
         });
+        builder = new AlertDialog.Builder(this);
         ButtonAsignarAsig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                asignaturasSeleccionadas = new boolean[nombreAsignaturas.size()];
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                builder.setTitle("Escoja las asignaturas");
-                charSequence = nombreAsignaturas.toArray(new CharSequence[nombreAsignaturas.size()]);
-                builder.setMultiChoiceItems(charSequence, asignaturasSeleccionadas, new DialogInterface.OnMultiChoiceClickListener() {
+                BBDD.child("Asignaturas").addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int position, boolean isChecked) {
-                        if (isChecked) {
-                            aignaturasItems.add(position);
-                        } else {
-                            aignaturasItems.remove((Integer.valueOf(position)));
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                            Asignaturas a = dataSnapshot1.getValue(Asignaturas.class);
+
+                                nombreAsignaturas.add(a.getNombre());
+
                         }
+                        asignaturasSeleccionadas = new boolean[nombreAsignaturas.size()];
+
+                        builder.setTitle("Escoja las asignaturas");
+                        charSequence = nombreAsignaturas.toArray(new CharSequence[nombreAsignaturas.size()]);
+                        builder.setMultiChoiceItems(charSequence, asignaturasSeleccionadas, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int position, boolean isChecked) {
+                                if (isChecked) {
+                                    aignaturasItems.add(position);
+                                } else {
+                                    aignaturasItems.remove((Integer.valueOf(position)));
+                                }
+                            }
+                        });
+                        builder.setCancelable(false);
+                        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ButtonAsignarAsig.setClickable(true);
+                            }
+                        });
+                        builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //guardamos en una lista las asignaturas que han sido seleccionados
+                                for (int i = 0; i < aignaturasItems.size(); i++) {
+                                    asignaturas.add(charSequence[aignaturasItems.get(i)].toString());
+                                }
+                                //creamos una lista que hace referencia a las asignaturas disponibles
+                                asignaturasRestantes = new ArrayList<>(nombreAsignaturas);
+                                //y le borramos los que esten en la lista de titulares
+                                asignaturasRestantes.removeAll(asignaturas);
+                                String nombreAsignaturas = "";
+                                for (int i = 0 ; i<asignaturas.size(); i++){
+
+                                    if (i==0){
+                                        nombreAsignaturas += asignaturas.get(i);
+
+                                    }else{
+                                        nombreAsignaturas += ", "+asignaturas.get(i);
+
+                                    }
+                                }
+                                textoAsignarAsignaturas.setText("Asignaturas: "+nombreAsignaturas);
+
+                            }
+
+                        });
+                        builder.show();
                     }
-                });
-                builder.setCancelable(false);
-                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ButtonAsignarAsig.setClickable(true);
-                    }
-                });
-                builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //guardamos en una lista las asignaturas que han sido seleccionados
-                        for (int i = 0; i < aignaturasItems.size(); i++) {
-                            asignaturas.add(charSequence[aignaturasItems.get(i)].toString());
-                        }
-                        //creamos una lista que hace referencia a las asignaturas disponibles
-                        asignaturasRestantes = new ArrayList<>(nombreAsignaturas);
-                        //y le borramos los que esten en la lista de titulares
-                        asignaturasRestantes.removeAll(asignaturas);
-
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
-
                 });
-                builder.show();
+
             }
         });
         buttonRegistrar.setOnClickListener(new View.OnClickListener() {
