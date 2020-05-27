@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trabajo1.R;
 import com.example.trabajofct.Modules.Asignaturas;
 import com.example.trabajofct.Modules.Usuarios;
+import com.example.trabajofct.Utils.Global;
 import com.example.trabajofct.Utils.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -72,9 +73,9 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth autorizacion;
     private DatabaseReference BBDD;
     private StorageReference storage;
-    private Button ButtonAsignarAsig;
+    private Button buttonAsignarAsig;
     private Usuarios usuario;
-    private Button ButtonAsignarGrupos;
+    private Button buttonAsignarGrupos;
     private boolean crear = true;
     private String idUsuario;
     private Usuarios usuarioMod;
@@ -111,8 +112,8 @@ public class RegisterActivity extends AppCompatActivity {
         botonAsignarGrupo = (Button)findViewById(R.id.botonAsignarGrupo);
         textoAsignarAsignaturas = (TextView) findViewById(R.id.textoAsignarAsignaturas);
         textoAsignarGrupo = (TextView) findViewById(R.id.textoAsignarGrupo);
-        ButtonAsignarAsig = (Button) findViewById(R.id.botonAsignarAsignaturas);
-        ButtonAsignarGrupos = (Button) findViewById(R.id.botonAsignarGrupo);
+        buttonAsignarAsig = (Button) findViewById(R.id.botonAsignarAsignaturas);
+        buttonAsignarGrupos = (Button) findViewById(R.id.botonAsignarGrupo);
 
 
         //para saber si se va a modificar o crear una asignatura
@@ -164,7 +165,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         });
         builder = new AlertDialog.Builder(this);
-        ButtonAsignarAsig.setOnClickListener(new View.OnClickListener() {
+        buttonAsignarAsig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BBDD.child("Asignaturas").addValueEventListener(new ValueEventListener() {
@@ -194,7 +195,7 @@ public class RegisterActivity extends AppCompatActivity {
                         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ButtonAsignarAsig.setClickable(true);
+                                buttonAsignarAsig.setClickable(true);
                             }
                         });
                         builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
@@ -243,7 +244,7 @@ public class RegisterActivity extends AppCompatActivity {
                 contraseña = editTextContraseña.getText().toString();
                 apellidos = editTextApellidos.getText().toString();
                 edad = Integer.parseInt(editTextEdad.getText().toString());
-                tipoUsuario = spinnerTipo.toString();
+                tipoUsuario = spinnerTipo.getSelectedItem().toString();
 
                 if (modificarFoto = true) {
                     if (uri != null) {
@@ -332,9 +333,14 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task2) {
 
                             if (task2.isSuccessful()) {
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                Toast.makeText(RegisterActivity.this, "Inicia sesion para continuar", Toast.LENGTH_SHORT).show();
-                                finish();
+                                if(Global.desdeDentro == false){
+                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                    Toast.makeText(RegisterActivity.this, "Inicia sesion para continuar", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }else{
+                                    startActivity(new Intent(RegisterActivity.this, GestionarActivity.class));
+                                }
+
 
                             } else {
                                 Toast.makeText(RegisterActivity.this, "No se han podido crear los datos correctamente", Toast.LENGTH_SHORT).show();

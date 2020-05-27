@@ -26,6 +26,7 @@ import com.example.trabajofct.Adapters.AdapterAsignaturas;
 import com.example.trabajofct.Adapters.AdapterUsuarios;
 import com.example.trabajofct.Modules.Asignaturas;
 import com.example.trabajofct.Modules.Usuarios;
+import com.example.trabajofct.Utils.Global;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -90,6 +91,7 @@ public class UsuariosFragment extends Fragment {
         anadirUsuarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.desdeDentro = true;
                 startActivity(new Intent(getContext(), RegisterActivity.class));
 
             }
