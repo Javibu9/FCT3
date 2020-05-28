@@ -29,6 +29,7 @@ import com.example.trabajofct.Modules.Usuarios;
 import com.example.trabajofct.Utils.Global;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -129,7 +130,10 @@ public class UsuariosFragment extends Fragment {
                         .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                BBDD.child("Usuario").child(usuarios.get(info.position).getIdUsuario()).removeValue();
+
+                                BBDD.child("Usuarios").child(usuarios.get(info.position).getIdUsuario()).removeValue();
+                                //FirebaseUser currentUser = usuarios.get(info.position);
+                                //currentUser.
                                 usuarios.remove(info.position);
                                 usuarios.clear();
                                 adapterUsuarios.notifyDataSetChanged();

@@ -134,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
                     editTextNombre.setText(usuarioMod.getNombre());
                     editTextApellidos.setText(usuarioMod.getApellidos());
                     editTextEmail.setText(usuarioMod.getEmail());
-                    editTextEdad.setText(usuarioMod.getEdad());
+                    editTextEdad.setText(""+usuarioMod.getEdad());
                     spinnerTipo.setSelection(getIndex(spinnerTipo, usuarioMod.getTipoUsuario()));
 
                     Picasso.with(getApplicationContext()).load(usuarioMod.getUrlImagen()).into(imagenUsuario);
@@ -258,6 +258,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         rutaFoto = uri.toString();
+                                        id = autorizacion.getCurrentUser().getUid();
 
                                         if (!nombre.isEmpty() && !email.isEmpty() && !contraseña.isEmpty() && !apellidos.isEmpty() && edad != 0) {
                                             if (contraseña.length() >= 6) {
@@ -270,6 +271,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                     //actualizamos con un nuevo objeto de asignaturas para la que ya estaba
                                                     usuarioMod = new Usuarios(id, rutaFoto, nombre, apellidos, email, edad, contraseña, tipoUsuario, grupo, asignaturas);
                                                     BBDD.child("Usuarios").child(idUsuario).setValue(usuarioMod);
+                                                    startActivity(new Intent(getApplicationContext(), GestionarActivity.class));
                                                 }
                                             } else {
                                                 Toast.makeText(RegisterActivity.this, "La contraseña debe de tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
@@ -324,8 +326,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-
-                    id = autorizacion.getCurrentUser().getUid();
 
                     BBDD.child("Usuarios").child(id).setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
 

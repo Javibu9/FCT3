@@ -47,7 +47,7 @@ public class GestionarActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TextView NombreUsuario;
+    private TextView nombreUsuario;
     private PagerAdapter adapter;
     private ImageView imagenPerfil;
     private AdapterGrupos adapterGrupos;
@@ -72,18 +72,22 @@ public class GestionarActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.dlayout);
         navigationView= (NavigationView) findViewById(R.id.navview);
         View headerView = navigationView.getHeaderView(0);
-        NombreUsuario = (TextView) headerView.findViewById(R.id.nombreusuario);
+        nombreUsuario = (TextView) headerView.findViewById(R.id.nombreusuario);
         firebase = FirebaseDatabase.getInstance().getReference();
         imagenPerfil = (ImageView) headerView.findViewById(R.id.imagenPerfil);
 
-        id = autorizacion.getCurrentUser().getUid();
+        //id = autorizacion.getCurrentUser().getUid();
 
-        firebase.child("Usuarios").child(id).addValueEventListener(new ValueEventListener() {
+        firebase.child("Usuarios").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Usuarios usuarios = dataSnapshot.getValue(Usuarios.class);
-                NombreUsuario.setText(""+usuarios.getNombre());
-                Picasso.with(getApplicationContext()).load(usuarios.getUrlImagen()).into(imagenPerfil);
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Usuarios usuarios = dataSnapshot1.getValue(Usuarios.class);
+                    if (usuarios.getEmail().equals(autorizacion.getCurrentUser().getEmail())) {
+                        nombreUsuario.setText("" + usuarios.getNombre());
+                        Picasso.with(getApplicationContext()).load(usuarios.getUrlImagen()).into(imagenPerfil);
+                    }
+                }
             }
 
             @Override
