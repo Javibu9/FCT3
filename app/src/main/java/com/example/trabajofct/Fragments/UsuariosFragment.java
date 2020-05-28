@@ -20,16 +20,11 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.trabajo1.R;
-import com.example.trabajofct.Activities.AnadirAsignatura;
-import com.example.trabajofct.Activities.RegisterActivity;
-import com.example.trabajofct.Adapters.AdapterAsignaturas;
+import com.example.trabajofct.Activities.AnadirUsuariosActivity;
 import com.example.trabajofct.Adapters.AdapterUsuarios;
-import com.example.trabajofct.Modules.Asignaturas;
 import com.example.trabajofct.Modules.Usuarios;
-import com.example.trabajofct.Utils.Global;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -92,8 +87,7 @@ public class UsuariosFragment extends Fragment {
         anadirUsuarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.desdeDentro = true;
-                startActivity(new Intent(getContext(), RegisterActivity.class));
+                startActivity(new Intent(getContext(), AnadirUsuariosActivity.class));
 
             }
         });
@@ -144,8 +138,9 @@ public class UsuariosFragment extends Fragment {
                 return true;
 
             case R.id.modificarUsuario :
-                Intent intent = new Intent(getActivity(), RegisterActivity.class);
-                intent.putExtra("idUsuario", usuarios.get(info.position).getIdUsuario());
+                Intent intent = new Intent(getActivity(), AnadirUsuariosActivity.class);
+                String a= usuarios.get(info.position).getIdUsuario();
+                intent.putExtra("idUsuario", a);
                 startActivity(intent);
                 return true;
 

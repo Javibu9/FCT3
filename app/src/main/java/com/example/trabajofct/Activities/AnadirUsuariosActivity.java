@@ -1,31 +1,27 @@
 package com.example.trabajofct.Activities;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.trabajo1.R;
 import com.example.trabajofct.Modules.Asignaturas;
-import com.example.trabajofct.Modules.Grupos;
 import com.example.trabajofct.Modules.Usuarios;
+import com.example.trabajofct.Utils.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -45,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class RegisterActivity extends AppCompatActivity {
+public class AnadirUsuariosActivity extends AppCompatActivity {
     private EditText editTextNombre;
     private EditText editTextEmail;
     private EditText editTextApellidos;
@@ -71,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String id;
     private final int GALLERY_INTENT = 1;
     private ImageView imagenUsuario;
-
+    private String idUsuarioAnadir;
     private FirebaseAuth autorizacion;
     private DatabaseReference BBDD;
     private StorageReference storage;
@@ -88,36 +84,73 @@ public class RegisterActivity extends AppCompatActivity {
     private ArrayList<Integer> aignaturasItems = new ArrayList<>();
     private CharSequence[] charSequence;
     private ArrayList<String> asignaturas = new ArrayList<String>();
-    private List<String> asignaturasRestantes;
-    private ListView listaMostrarGrupos;
-    private ArrayList<String>  grupos =new ArrayList();
+    private List<String>asignaturasRestantes;
+
     private AlertDialog.Builder builder;
-    private AlertDialog.Builder builder2;
-
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_anadir_usuarios);
 
         autorizacion = FirebaseAuth.getInstance();
         BBDD = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance().getReference("Usuarios");
 
 
-        buttonSubirFoto = (Button) findViewById(R.id.btnSubirFoto);
-        editTextNombre = (EditText) findViewById(R.id.editTextNombre);
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextContraseña = (EditText) findViewById(R.id.editTextContraseña);
-        editTextApellidos = (EditText) findViewById(R.id.editTextApellidos);
-        editTextEdad = (EditText) findViewById(R.id.editTextEdad);
-        buttonRegistrar = (Button) findViewById(R.id.btnRegistrar);
-        imagenUsuario = (ImageView) findViewById(R.id.crearImagenUsuario);
-        botonAsignarAsignaturas = (Button) findViewById(R.id.botonAsignarAsignaturas);
-        botonAsignarGrupo = (Button) findViewById(R.id.botonAsignarGrupo);
-        textoAsignarAsignaturas = (TextView) findViewById(R.id.textoAsignarAsignaturas);
-        textoAsignarGrupo = (TextView) findViewById(R.id.textoAsignarGrupo);
-        buttonAsignarAsig = (Button) findViewById(R.id.botonAsignarAsignaturas);
-        buttonAsignarGrupos = (Button) findViewById(R.id.botonAsignarGrupo);
+        buttonSubirFoto = (Button) findViewById(R.id.btnSubirFotoAnadir);
+        editTextNombre = (EditText) findViewById(R.id.editTextNombreAnadir);
+        editTextEmail = (EditText) findViewById(R.id.editTextEmailAnadir);
+        editTextContraseña = (EditText) findViewById(R.id.editTextContraseñaAnadir);
+        editTextApellidos = (EditText) findViewById(R.id.editTextApellidosAnadir);
+        editTextEdad = (EditText) findViewById(R.id.editTextEdadAnadir);
+        buttonRegistrar = (Button) findViewById(R.id.btnRegistrarAnadir);
+        imagenUsuario = (ImageView) findViewById(R.id.crearImagenUsuarioAnadir);
+        spinnerTipo = (Spinner) findViewById(R.id.spinnerTipoAnadir);
+        botonAsignarAsignaturas = (Button) findViewById(R.id.botonAsignarAsignaturasAnadir);
+        botonAsignarGrupo = (Button)findViewById(R.id.botonAsignarGrupoAnadir);
+        textoAsignarAsignaturas = (TextView) findViewById(R.id.textoAsignarAsignaturasAnadir);
+        textoAsignarGrupo = (TextView) findViewById(R.id.textoAsignarGrupoAnadir);
+        buttonAsignarAsig = (Button) findViewById(R.id.botonAsignarAsignaturasAnadir);
+        buttonAsignarGrupos = (Button) findViewById(R.id.botonAsignarGrupoAnadir);
+
+
+        //para saber si se va a modificar o crear una asignatura
+        if (getIntent().getExtras() != null) {
+            idUsuario = getIntent().getStringExtra("idUsuario");
+            crear = false;
+        } else {
+            crear = true;
+        }
+
+        //si se va a modificar se cargan los datos de esa asignatura
+        if (crear == false) {
+
+            BBDD.child("Usuarios").child(idUsuario).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    usuarioMod = dataSnapshot.getValue(Usuarios.class);
+                    editTextNombre.setText(usuarioMod.getNombre());
+                    editTextApellidos.setText(usuarioMod.getApellidos());
+                    editTextEmail.setText(usuarioMod.getEmail());
+                    editTextEdad.setText(""+usuarioMod.getEdad());
+                    spinnerTipo.setSelection(getIndex(spinnerTipo, usuarioMod.getTipoUsuario()));
+
+                    Picasso.with(getApplicationContext()).load(usuarioMod.getUrlImagen()).into(imagenUsuario);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+        tipos = Util.tiposUsuario();
+        final ArrayAdapter<String> posicionAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, tipos);
+        spinnerTipo.setAdapter(posicionAdapter);
 
 
         buttonSubirFoto.setOnClickListener(new View.OnClickListener() {
@@ -130,52 +163,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
         });
-        BBDD.child("Grupos").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                    Grupos grupo = dataSnapshot1.getValue(Grupos.class);
-                    grupos.add(grupo.getNombre());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-         builder2 = new AlertDialog.Builder(this);
-
-        buttonAsignarGrupos.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                LayoutInflater inflaterList2 = getLayoutInflater();
-                View dialogView2 = inflaterList2.inflate(R.layout.emergente_asignar_grupo, null);
-                listaMostrarGrupos = (ListView) dialogView2.findViewById(R.id.listaMostrarGrupos);
-
-                ArrayAdapter<CharSequence> adapter2 = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, grupos.toArray());
-                listaMostrarGrupos.setAdapter(adapter2);
-                builder2.setView(dialogView2);
-                builder2.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-                builder2.show();
-
-                listaMostrarGrupos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String nombreGrupo = parent.getItemAtPosition(position).toString();
-                        grupo = nombreGrupo;
-                        textoAsignarGrupo.setText("grupo: " + nombreGrupo);
-                    }
-                });
-            }
-        });
-
         builder = new AlertDialog.Builder(this);
         buttonAsignarAsig.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
                 BBDD.child("Asignaturas").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                             Asignaturas a = dataSnapshot1.getValue(Asignaturas.class);
 
                             nombreAsignaturas.add(a.getNombre());
@@ -222,17 +209,17 @@ public class RegisterActivity extends AppCompatActivity {
                                 //y le borramos los que esten en la lista de titulares
                                 asignaturasRestantes.removeAll(asignaturas);
                                 String nombreAsignaturas = "";
-                                for (int i = 0; i < asignaturas.size(); i++) {
+                                for (int i = 0 ; i<asignaturas.size(); i++){
 
-                                    if (i == 0) {
+                                    if (i==0){
                                         nombreAsignaturas += asignaturas.get(i);
 
-                                    } else {
-                                        nombreAsignaturas += ", " + asignaturas.get(i);
+                                    }else{
+                                        nombreAsignaturas += ", "+asignaturas.get(i);
 
                                     }
                                 }
-                                textoAsignarAsignaturas.setText("Asignaturas: " + nombreAsignaturas);
+                                textoAsignarAsignaturas.setText("Asignaturas: "+nombreAsignaturas);
 
                             }
 
@@ -256,7 +243,7 @@ public class RegisterActivity extends AppCompatActivity {
                 contraseña = editTextContraseña.getText().toString();
                 apellidos = editTextApellidos.getText().toString();
                 edad = Integer.parseInt(editTextEdad.getText().toString());
-                tipoUsuario = "Alumno";
+                tipoUsuario = spinnerTipo.getSelectedItem().toString();
 
                 if (modificarFoto = true) {
                     if (uri != null) {
@@ -270,19 +257,27 @@ public class RegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         rutaFoto = uri.toString();
+                                        id = autorizacion.getCurrentUser().getUid();
 
                                         if (!nombre.isEmpty() && !email.isEmpty() && !contraseña.isEmpty() && !apellidos.isEmpty() && edad != 0) {
                                             if (contraseña.length() >= 6) {
+                                                if (crear == true) {
+                                                    idUsuarioAnadir = BBDD.child("Usuarios").push().getKey();
+                                                    usuario = new Usuarios(idUsuarioAnadir, rutaFoto, nombre, apellidos, email, edad, contraseña, tipoUsuario, grupo, asignaturas);
+                                                    registerUser();
 
-                                                registerUser();
-
-
+                                                } else {
+                                                    //actualizamos con un nuevo objeto de asignaturas para la que ya estaba
+                                                    usuarioMod = new Usuarios(id, rutaFoto, nombre, apellidos, email, edad, contraseña, tipoUsuario, grupo, asignaturas);
+                                                    BBDD.child("Usuarios").child(idUsuario).setValue(usuarioMod);
+                                                    startActivity(new Intent(getApplicationContext(), GestionarActivity.class));
+                                                }
                                             } else {
-                                                Toast.makeText(RegisterActivity.this, "La contraseña debe de tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getApplicationContext(), "La contraseña debe de tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
 
                                             }
                                         } else {
-                                            Toast.makeText(RegisterActivity.this, "Debe completar todos los campos", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "Debe completar todos los campos", Toast.LENGTH_SHORT).show();
 
                                         }
 
@@ -294,7 +289,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Inserte una imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Inserte una imagen", Toast.LENGTH_SHORT).show();
 
                     }
                 } else {
@@ -326,39 +321,44 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-
         autorizacion.createUserWithEmailAndPassword(email, contraseña).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    id = autorizacion.getCurrentUser().getUid();
-                    usuario = new Usuarios(id, rutaFoto, nombre, apellidos, email, edad, contraseña, tipoUsuario, grupo, asignaturas);
 
-                    BBDD.child("Usuarios").child(id).setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    BBDD.child("Usuarios").child(idUsuarioAnadir).setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
 
                         @Override
                         public void onComplete(@NonNull Task<Void> task2) {
 
                             if (task2.isSuccessful()) {
-
-                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                    Toast.makeText(RegisterActivity.this, "Inicia sesion para continuar", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(getApplicationContext(), GestionarActivity.class));
                                     finish();
 
 
 
                             } else {
-                                Toast.makeText(RegisterActivity.this, "No se han podido crear los datos correctamente", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "No se han podido crear los datos correctamente", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
                 } else {
-                    Toast.makeText(RegisterActivity.this, "No se pudo registrar este usuario", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No se pudo registrar este usuario", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
+    private int getIndex(Spinner spinner, String myString) {
 
+        int index = 0;
+
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).equals(myString)) {
+                index = i;
+            }
+        }
+        return index;
+    }
 }

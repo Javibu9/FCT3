@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.trabajofct.Activities.AnadirAsignatura"></activity>
+        <activity android:name="com.example.trabajofct.Activities.AnadirUsuariosActivity"></activity>
+        <activity android:name="com.example.trabajofct.Activities.AnadirAsignatura" />
         <activity android:name="com.example.trabajofct.Activities.AnadirGrupo" />
         <activity android:name="com.example.trabajofct.Activities.GestionarActivity" />
         <activity android:name="com.example.trabajofct.Activities.RecuperarContrasena" />
